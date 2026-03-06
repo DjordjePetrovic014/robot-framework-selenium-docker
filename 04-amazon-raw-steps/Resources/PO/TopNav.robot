@@ -1,5 +1,5 @@
 *** Settings ***
-Documentation  Amazon top navigation
+Documentation  Amazon top nav
 Library  SeleniumLibrary
 
 *** Keywords ***

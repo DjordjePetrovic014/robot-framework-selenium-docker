@@ -1,36 +1,35 @@
 *** Settings ***
+#Run Test Script In Docker
+#docker run --rm --shm-size=1g -v "${PWD}:/app" -w /app crm-robot robot -d Results Tests/Crm.docker.robot
+
 Documentation       This is some basic info about the whole suite
 Library             SeleniumLibrary
 
-#Run the script
-# robot -d 20-crm-apply-your-skills-01\Results 20-crm-apply-your-skills-01\Tests\Crm.robot
-
 *** Variables ***
-
-
+${URL}              pwd
+${BROWSER}          chrome
 
 *** Test Cases ***
 Should be able to add new customer
     [Documentation]         This is some basic info about the TEST
     [Tags]                  1006    Smoke   Contacts
-    #Initialize Selenium
+
+    # Initialize Selenium
     Set selenium speed      .2s
-    Set selenium timeout     5s
+    Set selenium timeout    5s
 
-    # Open the browser
+    # Open the browser (Docker/headless Chrome options)
     log                     Starting the test case!
+    ${options}=    Evaluate    selenium.webdriver.ChromeOptions()    selenium.webdriver
+    Call Method    ${options}    add_argument    --headless
+    Call Method    ${options}    add_argument    --no-sandbox
+    Call Method    ${options}    add_argument    --disable-dev-shm-usage
+    Open Browser    ${URL}    ${BROWSER}    options=${options}
 
+    page should contain     Customers Are Priority One
 
-    open browser            https://automationplayground.com/crm/       chrome
-
-    # Resize browser window for recording
-    set window position    x=0    y=0
-    set window size        width=1920  height=768
-
-    page should contain    Customers Are Priority One
-
-    click link             id=SignIn
-    page should contain    Login
+    click link              id=SignIn
+    page should contain     Login
 
     input text              id=email-id         admin@robotframeworktutorial.com
     input text              id=password         qwe
@@ -45,15 +44,12 @@ Should be able to add new customer
     input text              id=LastName             Petrovic
     input text              id=City                 Valjevo
     select from list by value    id=StateOrRegion       TX
-    select radio button     gender                  female
-    select checkbox         name=promos-name
-    click button            Submit
+    select radio button      gender                  female
+    select checkbox          name=promos-name
+    click button             Submit
     wait until page contains    Success! New customer added.
 
-    click link              Sign Out
-    wait until page contains    Signed Out
-
+    sleep                  3s
     close browser
-
 
 *** Keywords ***

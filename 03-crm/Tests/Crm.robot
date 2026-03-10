@@ -3,7 +3,7 @@ Documentation       This is some basic info about the whole suite
 Library             SeleniumLibrary
 
 #Run the script
-# robot -d 20-crm-apply-your-skills-01\Results 20-crm-apply-your-skills-01\Tests\Crm.robot
+# robot -d 03-crm\Results 03-crm\Tests\Crm.robot
 
 *** Variables ***
 
